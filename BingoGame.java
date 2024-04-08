@@ -4,10 +4,20 @@ import java.util.Set;
 
 public class BingoGame {
     private static Random rand = new Random();
-    private BingoBoard playerBoard = new BingoBoard("Player", rand);
-    private BingoBoard computerBoard = new BingoBoard("Computer", rand);
+    protected String player;
+    protected String CPU;
+    private BingoBoard playerBoard;
+    private BingoBoard computerBoard;
     private Set<Integer> rollSet = new LinkedHashSet<Integer>();
     private int roll;
+
+    public void playersName(String player) {
+        playerBoard = new BingoBoard(player, rand);
+    }
+
+    public void computersName(String CPU) {
+       computerBoard = new BingoBoard(CPU, rand);
+    }
 
     public void roll() {
         roll = rand.nextInt(75) + 1;
@@ -21,8 +31,6 @@ public class BingoGame {
         StringBuilder bingoString = new StringBuilder();
         bingoString.append(playerBoard.toString());
         bingoString.append(computerBoard.toString());
-        bingoString.append("Roll History: ");
-        bingoString.append(rollSet);
         return bingoString.toString();
     }
 
@@ -52,30 +60,38 @@ public class BingoGame {
         }
     }
 
-    public void checkBoards() {
+    public void checkBoards(boolean found) {
         int rollIndex = getRollIndex();
         String rollString = getRollString();
 
         // Display the number that is being called for 
         System.out.println("Calling " + rollString);
-
-        playerBoard.checkBoard(roll, rollIndex, rollString);
+        
         computerBoard.checkBoard(roll, rollIndex, rollString);
+
+        if (found == true) {
+            playerBoard.checkBoard(roll, rollIndex, rollString); 
+        }
+        
     }
 
+    // Add print statement for winners within method
     public boolean checkBingoWinner() {
         boolean playerBingo = playerBoard.checkBingo();
         boolean computerBingo = computerBoard.checkBingo();
 
         if (playerBingo && computerBingo) {
             // Both achieved bingo at the same time
+            System.out.println("Player & Computer has won Bingo!");
             return true;
         }
         else if (playerBingo) {
+            System.out.println("Player has won Bingo!");
             return true;
             // Player achieved bingo
         }
         else if (computerBingo) {
+            System.out.println("Computer has won Bingo!");
             return true;
             // Computer achieved bingo
         }
@@ -85,19 +101,23 @@ public class BingoGame {
         }
     }
 
+    // Add print statement for winners within method
     public boolean checkBlackoutWinner() {
         boolean playerBlackout = playerBoard.checkBlackOut();
         boolean computerBlackout = computerBoard.checkBlackOut();
 
         if (playerBlackout && computerBlackout) {
             // Both achieved blackout at the same time
+            System.out.println("Player & Computer has won Blackout!");
             return true;
         }
         else if (playerBlackout) {
+            System.out.println("Player has won Blackout!");
             return true;
             // Player achieved blackout
         }
         else if (computerBlackout) {
+            System.out.println("Computer has won Blackout!");
             return true;
             // Computer achieved blackout
         }
